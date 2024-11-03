@@ -8,13 +8,24 @@ import {
 } from '@clerk/nextjs'
 import { auth } from '@clerk/nextjs/server'
 
+import Image from 'next/image';
+
 export default function Header() {
   const { userId }: { userId: string | null } = auth()
   return (
     <header className="bg-background border-b">
       <div className="container mx-auto px-8 py-4 flex justify-between items-center">
-        <Link href="/" className="text-2xl font-bold">
-          Next Template
+        <Link href="/" className="text-2xl flex items-center">
+          <Image 
+            src="/logo.svg"
+            alt="Logo"
+            width={30}
+            height={30}
+            className="mr-2"
+          />
+          <span>
+            Prompt <span className="font-bold">Overflow</span>
+          </span>
         </Link>
         <nav>
           {userId ? (
