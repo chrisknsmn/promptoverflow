@@ -7,6 +7,7 @@ const config: Config = {
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
+  safelist: ["dark"],
   theme: {
   	extend: {
   		colors: {
@@ -15,6 +16,10 @@ const config: Config = {
   			ring: 'hsl(var(--ring))',
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
+			dark: 'hsl(var(--dark))',
+  			light: 'hsl(var(--light))',
+			footer: 'hsl(var(--footer))',
+			footertext: 'hsl(var(--footer-text))',
   			primary: {
   				DEFAULT: 'hsl(var(--primary))',
   				foreground: 'hsl(var(--primary-foreground))'

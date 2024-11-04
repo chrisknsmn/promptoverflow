@@ -1,57 +1,101 @@
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import prisma from "@/lib/db"
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import Link from "next/link"
 
-export default function Home() {
+async function getPosts() {
+  const posts = await prisma.post.findMany({
+    include: {
+      author: {
+        select: {
+          name: true,
+          username: true,
+          avatarUrl: true,
+        },
+      },
+      tags: {
+        select: {
+          tag: {
+            select: {
+              name: true,
+              color: true,
+            },
+          },
+        },
+      },
+      _count: {
+        select: {
+          comments: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: 'desc',
+    },
+  })
+  return posts
+}
+
+export default async function Home() {
+  const posts = await getPosts()
   return (
-    <div className="container mx-auto px-4 py-8">
-      {/* Banner */}
-      <section className="py-12">
-        <div className="container mx-auto px-4">
-          <Card>
-            <CardContent className="pt-6">
-              <h1 className="text-2xl font-bold">Next Template</h1>
-            </CardContent>
-          </Card>
-        </div>
-      </section>
-      {/* About */}
-      <section className="py-12 bg-background">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-8">Our Services</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[1, 2, 3].map((i) => (
-              <Card key={i}>
-                <CardHeader>
-                  <CardTitle>Service {i}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription>
-                    This is a brief description of Service {i}. It explains the key benefits and features of this particular service offering.
-                  </CardDescription>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-      {/* Callout */}
-      <section className="py-12">
-        <div className="container mx-auto px-4">
-          <Card>
-            <CardContent className="pt-6">
-              <div className="text-center">
-                <h2 className="text-3xl font-bold mb-4">Get Started Today</h2>
-                <p className="mb-6">Sign up for our newsletter to receive updates and special offers.</p>
-                <form className="max-w-md mx-auto space-y-4">
-                  <Input type="email" placeholder="Enter your email" required />
-                  <Button type="submit" className="w-full">Subscribe</Button>
-                </form>
+    <div className="container mx-auto py-6 px-4">
+      <div className="grid gap-6">
+        {posts.map((post) => (
+          <Card key={post.id}>
+            <CardHeader>
+              <div className="flex items-start justify-between">
+                <Link href={`/posts/${post.id}`} className="hover:text-primary">
+                  <CardTitle>{post.title}</CardTitle>
+                </Link>
               </div>
+              <div className="flex flex-wrap gap-2 mt-2">
+                {post.tags.map(({ tag }) => (
+                  <Badge
+                    key={tag.name}
+                    style={{
+                      backgroundColor: tag.color || undefined,
+                      color: '#FFFFFF'
+                    }}
+                  >
+                    {tag.name}
+                  </Badge>
+                ))}
+              </div>
+            </CardHeader>
+            
+            <CardContent>
+              <p className="text-muted-foreground line-clamp-3">
+                {post.content}
+              </p>
             </CardContent>
+
+            <CardFooter className="flex justify-between">
+              <div className="flex items-center gap-2">
+                {post.author.avatarUrl && (
+                  <img 
+                    src={post.author.avatarUrl}
+                    alt={post.author.name || ""}
+                    className="w-6 h-6 rounded-full"
+                  />
+                )}
+                <span className="text-sm text-muted-foreground">
+                  {post.author.name || post.author.username}
+                </span>
+              </div>
+              <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                <span>{post.voteCount} votes</span>
+                <span>{post._count.comments} comments</span>
+                <span>{post.viewCount} views</span>
+              </div>
+            </CardFooter>
           </Card>
-        </div>
-      </section>
+        ))}
+
+        {posts.length === 0 && (
+          <p className="text-center text-muted-foreground">No posts found.</p>
+        )}
+      </div>
     </div>
-  );
+  )
 }
