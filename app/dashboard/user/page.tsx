@@ -1,6 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card"
 import { currentUser } from "@clerk/nextjs/server";
-import { initUser } from "@/app/lib/db";
+import { initUser } from "@/lib/prisma";
 import { redirect } from 'next/navigation';
 
 export default async function Page() {
