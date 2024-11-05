@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/card";
 
 export default async function Home() {
+  
   const tags = await prisma.tag.findMany({
     orderBy: [
       {
