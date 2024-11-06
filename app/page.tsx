@@ -1,20 +1,15 @@
 import { getPosts } from "@/lib/prisma"
-import { SearchBar } from "@/components/layout/searchbar"
-import DisplayPosts from "@/app/components/displayposts"
+import SearchContainer from "@/app/components/searchcontainer"
 
-export default async function Home({
+export default async function Page({
   searchParams
 }: {
   searchParams: { q?: string }
 }) {
   const posts = await getPosts(searchParams.q);
   return (
-    <div className="container mx-auto py-2 px-4">
-      <SearchBar
-        placeholder="Search posts..."
-        className="mb-4"
-      />
-      <DisplayPosts posts={posts} />
+    <div className="py-2 px-4 min-h-[100vh]">
+      <SearchContainer params={posts} />
     </div>
   )
 }

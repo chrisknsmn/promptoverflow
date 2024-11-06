@@ -1,5 +1,6 @@
 import prisma from "@/lib/db";
 
+// Clerk
 export async function initUser(user: any) {
     let userData = await getUser(user);
     if (userData == null) {
@@ -29,6 +30,8 @@ export async function getUser(user: any) {
     return userData;
 }
 
+
+// General Search
 export async function getPosts(query?: string) {
   return await prisma.post.findMany({
     take: 20, // Limit to 20 posts
