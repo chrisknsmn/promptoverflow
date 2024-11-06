@@ -2,6 +2,8 @@ import Header from '@/components/layout/header'
 import Footer from '@/components/layout/footer'
 import Sidenav from '@/components/layout/sidenav'
 import Adblock from '@/components/layout/adblock'
+import Loading from '@/components/layout/homeloading'
+import { Suspense } from 'react'
 
 import './globals.css'
 import {
@@ -21,7 +23,9 @@ export default function RootLayout({
           <main className="max-w-screen-2xl mx-auto flex flex-1">
             <Sidenav />
             <Adblock>
-              {children}
+              <Suspense fallback={<Loading/>}>
+                {children}
+              </Suspense>
             </Adblock>
           </main>
           <Footer />
