@@ -81,6 +81,65 @@ export async function getPosts(query?: string) {
   })
 }
 
+// This was created for the questions page. 
+// It is generally aimed at getting posts with few comments. 
+// Intended to prioritize unanswered posts. 
+export async function getQuestions(query?: string) {
+  return await prisma.post.findMany({
+    take: 20,
+    where: query ? {
+      OR: [
+        {
+          title: {
+            contains: query,
+            mode: 'insensitive'
+          }
+        },
+        {
+          content: {
+            contains: query,
+            mode: 'insensitive'
+          }
+        }
+      ]
+    } : undefined,
+    include: {
+      author: {
+        select: {
+          name: true,
+          username: true,
+          avatarUrl: true,
+        },
+      },
+      tags: {
+        select: {
+          tag: {
+            select: {
+              name: true,
+              color: true,
+            },
+          },
+        },
+      },
+      _count: {
+        select: {
+          comments: true,
+        },
+      },
+    },
+    orderBy: [
+      {
+        comments: {
+          _count: 'asc', // Posts with fewer comments first
+        },
+      },
+      {
+        createdAt: 'desc', // Then by most recent
+      }
+    ],
+  });
+}
+
 async function getTags(query?: string) {
   return await prisma.tag.findMany({
     take: 20,

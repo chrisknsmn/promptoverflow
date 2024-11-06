@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/card";
 
 export default async function Home() {
-  
   const tags = await prisma.tag.findMany({
     orderBy: [
       {
@@ -58,27 +57,26 @@ export default async function Home() {
             <h2 className="text-2xl font-semibold capitalize mb-2">
               {type.replace("-", " ")}
             </h2>
-
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
               {tagsInType.map((tag) => (
-                <Link href={`/tags/${tag.id}`}>
+                <Link 
+                  href={`/tags/${tag.id}`}
+                  className="h-full" // Make Link take full height
+                  key={tag.id}
+                >
                   <Card
-                    key={tag.id}
-                    className="hover:shadow-lg transition-shadow duration-200 cursor-pointer"
+                    className="hover:shadow-lg transition-shadow duration-200 cursor-pointer h-full flex flex-col"
                   >
                     <CardHeader className="space-y-1 p-4">
                       <Badge
                         className="w-fit text-white"
-                        //   style={{
-                        //     backgroundColor: tag.color || undefined,
-                        //   }}
                       >
                         {tag.postCount} posts
                       </Badge>
                       <CardTitle className="text-lg">{tag.name}</CardTitle>
                     </CardHeader>
-                    <CardContent className="p-4 pt-0">
-                      <p className="text-sm text-muted-foreground line-clamp-2">
+                    <CardContent className="p-4 pt-0 flex-grow flex flex-col">
+                      <p className="text-sm text-muted-foreground line-clamp-2 flex-grow">
                         {tag.description}
                       </p>
                       <div className="mt-4 flex items-center gap-2 text-sm text-muted-foreground">

@@ -2,9 +2,9 @@
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 
-import SearchForm from "@/app/components/searchform";
-import Posts from "@/app/components/loadedposts";
-import Loading from "@/app/components/loading";
+import SearchForm from "./searchform";
+import Posts from "./loadedposts";
+import Loading from "./loading";
 
 import type { PostsProps } from "@/types/post";
 

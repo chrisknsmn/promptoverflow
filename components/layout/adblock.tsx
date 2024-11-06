@@ -10,7 +10,7 @@ const Adblock: React.FC<AdblockProps> = ({ children }) => {
       <div className='flex-1 p-2'>
         {children}
       </div>
-      <div className="w-full max-w-[100%] xl:max-w-[300px] text-white flex justify-center items-center bg-background border-0 xl:border-l border-primary">
+      <div className="w-full max-w-[100%] xl:max-w-[300px] text-white flex justify-center items-center bg-background">
         <p className='text-dark p-4'>AD Block</p>
       </div>
     </section>
