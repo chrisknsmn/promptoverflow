@@ -11,5 +11,5 @@ export default async function Page({
     <div className="py-2 px-4 min-h-[100vh]">
       <SearchContainer params={posts} />
     </div>
-  )
+  ) 
 }
