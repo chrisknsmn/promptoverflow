@@ -1,19 +1,20 @@
-import prisma from "@/lib/db";
-import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-} from "@/components/ui/card";
+import { getFilteredPosts } from "@/lib/prisma"
+import SearchContainer from "@/components/layout/search/posts/searchcontainer"
 
-export default async function Page() {
+export default async function Page({
+  searchParams,
+  params
+}: {
+  searchParams: { q?: string },
+  params: any;
+}) {
+  // const posts = await getPosts(searchParams.q, searchParams.category);
+  // console.log(params.tag);
+  const posts = await getFilteredPosts(searchParams.q, params.tag);
+  // console.log(posts);
   return (
-    <div className="">
-        List
+    <div className="py-2 px-4 min-h-[100vh]">
+      <SearchContainer params={posts} />
     </div>
-  );
+  ) 
 }

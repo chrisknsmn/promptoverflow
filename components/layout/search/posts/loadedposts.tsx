@@ -18,14 +18,10 @@ export default function Posts({ params }: PostsProps) {
               </p>
             </div>
             {post.tags.length > 0 && (
-              <div className="flex flex-wrap">
+              <div className="flex flex-wrap mt-2 gap-2">
                 {post.tags.map(({ tag }) => (
                   <Badge
                     key={tag.name}
-                    style={
-                      tag.color ? { backgroundColor: tag.color } : undefined
-                    }
-                    variant="secondary"
                   >
                     {tag.name}
                   </Badge>

@@ -1,4 +1,3 @@
-// searchcontainer.tsx
 "use client";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
@@ -10,6 +9,7 @@ import Loading from "./loading";
 import type { TagProps } from "@/types/tags";
 
 export default function SearchContainer({ tags }: TagProps) {
+  
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 

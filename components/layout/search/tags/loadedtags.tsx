@@ -52,7 +52,7 @@ export default function Tags({ tags }: TagProps) {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
                 {tagsInType.map((tag) => (
                   <Link
-                    href={`/tags/${tag.id}`}
+                    href={`/tags/${tag.name}`}
                     className="h-full"
                     key={tag.id}
                   >

@@ -1,3 +1,4 @@
+import { Prisma } from '@prisma/client';
 import prisma from "@/lib/db";
 
 // Clerk
@@ -31,7 +32,7 @@ export async function getUser(user: any) {
 }
 
 
-// General Search
+// Main Search
 export async function getPosts(query?: string) {
   return await prisma.post.findMany({
     take: 20, // Limit to 20 posts
@@ -130,19 +131,88 @@ export async function getQuestions(query?: string) {
     orderBy: [
       {
         comments: {
-          _count: 'asc', // Posts with fewer comments first
+          _count: 'asc',
         },
       },
       {
-        createdAt: 'desc', // Then by most recent
+        createdAt: 'desc',
       }
     ],
   });
 }
 
-async function getTags(query?: string) {
-  return await prisma.tag.findMany({
+//Get posts by Tag
+export async function getFilteredPosts(query?: string, tagName?: string) {
+  console.log("Filtering by tag:", tagName, "and query:", query);
+  
+  const where: Prisma.PostWhereInput = {
+    AND: [
+      // Tag filter
+      tagName ? {
+        tags: {
+          some: {
+            tag: {
+              name: tagName
+            }
+          }
+        }
+      } : {},
+      // Search query
+      query ? {
+        OR: [
+          {
+            title: {
+              contains: query,
+              mode: 'insensitive'
+            }
+          },
+          {
+            content: {
+              contains: query,
+              mode: 'insensitive'
+            }
+          }
+        ]
+      } : {}
+    ]
+  };
+
+  return await prisma.post.findMany({
     take: 20,
+    where,
+    include: {
+      author: {
+        select: {
+          name: true,
+          username: true,
+          avatarUrl: true,
+        },
+      },
+      tags: {
+        select: {
+          tag: {
+            select: {
+              name: true,
+              color: true,
+            },
+          },
+        },
+      },
+      _count: {
+        select: {
+          comments: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: 'desc',
+    },
+  });
+}
+
+export async function getTags(query?: string) {
+  return await prisma.tag.findMany({
+    take: 50,
     where: query ? {
       OR: [
         {
@@ -160,6 +230,18 @@ async function getTags(query?: string) {
         {
           synonyms: {
             hasSome: [query]
+          }
+        },
+        {
+          name: {
+            contains: query.replace(/[^a-zA-Z0-9]/g, ''),
+            mode: 'insensitive'
+          }
+        },
+        {
+          name: {
+            startsWith: query,
+            mode: 'insensitive'
           }
         }
       ]
@@ -183,9 +265,9 @@ async function getTags(query?: string) {
   })
 }
 
-async function getUsers(query?: string) {
+export async function getUsers(query?: string) {
   return await prisma.user.findMany({
-    take: 20,
+    take: 50,
     where: query ? {
       OR: [
         {
@@ -203,6 +285,24 @@ async function getUsers(query?: string) {
         {
           email: {
             contains: query,
+            mode: 'insensitive'
+          }
+        },
+        {
+          bio: {
+            contains: query,
+            mode: 'insensitive'
+          }
+        },
+        {
+          name: {
+            contains: query.replace(/[^a-zA-Z0-9]/g, ''),
+            mode: 'insensitive'
+          }
+        },
+        {
+          username: {
+            startsWith: query,
             mode: 'insensitive'
           }
         }
