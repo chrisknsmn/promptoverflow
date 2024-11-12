@@ -210,6 +210,75 @@ export async function getFilteredPosts(query?: string, tagName?: string) {
   });
 }
 
+export async function manyFilteredPosts(query?: string, tagNames?: string[]) {  console.log("Filtering by tags:", tagNames, "and query:", query);
+
+  const where: Prisma.PostWhereInput = {
+    AND: [
+      // Multiple tags filter
+      tagNames && tagNames.length > 0 ? {
+        tags: {
+          some: {
+            tag: {
+              name: {
+                in: tagNames
+              }
+            }
+          }
+        }
+      } : {},
+      // Search query
+      query ? {
+        OR: [
+          {
+            title: {
+              contains: query,
+              mode: 'insensitive'
+            }
+          },
+          {
+            content: {
+              contains: query,
+              mode: 'insensitive'
+            }
+          }
+        ]
+      } : {}
+    ]
+  };
+
+  return await prisma.post.findMany({
+    take: 20,
+    where,
+    include: {
+      author: {
+        select: {
+          name: true,
+          username: true,
+          avatarUrl: true,
+        },
+      },
+      tags: {
+        select: {
+          tag: {
+            select: {
+              name: true,
+              color: true,
+            },
+          },
+        },
+      },
+      _count: {
+        select: {
+          comments: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: 'desc',
+    },
+  });
+}
+
 export async function getTags(query?: string) {
   return await prisma.tag.findMany({
     take: 50,

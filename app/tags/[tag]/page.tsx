@@ -11,7 +11,6 @@ export default async function Page({
   // const posts = await getPosts(searchParams.q, searchParams.category);
   // console.log(params.tag);
   const posts = await getFilteredPosts(searchParams.q, params.tag);
-  // console.log(posts);
   return (
     <div className="py-2 px-4 min-h-[100vh]">
       <SearchContainer params={posts} />
