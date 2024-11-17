@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button"
 import {
   SignInButton,
+  SignOutButton,
   SignedOut,
 } from '@clerk/nextjs'
 import { 
@@ -11,7 +12,7 @@ import {
   DropdownMenuItem, 
   DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu"
-import { User, UserPlus, Menu } from 'lucide-react'
+import { User, UserPlus, LogOut, LogIn, Menu, FilePen } from 'lucide-react'
 import Logo from '@/public/LogoComponent';
 import { navItems } from './navdetails'
 
@@ -53,6 +54,14 @@ export default function Header() {
                             <span>Profile</span>
                         </Link>
                       </DropdownMenuItem>
+                      <DropdownMenuItem>
+                        <SignOutButton>
+                          <Link href="/dashboard/user" className="flex items-center">
+                              <LogOut className="mr-2 h-4 w-4" />
+                              <span>Sign Out</span>
+                          </Link>
+                        </SignOutButton>
+                      </DropdownMenuItem>
                     </>
                   ) : (
                     <>
@@ -60,7 +69,7 @@ export default function Header() {
                         <SignedOut>
                           <SignInButton mode="modal">
                             <Link href="/sign-up" className="flex items-center">
-                                <User className="mr-2 h-4 w-4" />
+                                <LogIn className="mr-2 h-4 w-4" />
                                 <span>Sign In</span>
                             </Link>
                           </SignInButton>
@@ -70,7 +79,7 @@ export default function Header() {
                         <SignedOut>
                           <SignInButton mode="modal">
                             <Link href="/sign-up" className="flex items-center">
-                                <UserPlus className="mr-2 h-4 w-4" />
+                                <FilePen className="mr-2 h-4 w-4" />
                                 <span>Sign Up</span>
                             </Link>
                           </SignInButton>

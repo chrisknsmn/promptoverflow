@@ -12,7 +12,7 @@ const Sidenav = () => {
     <>
       {/* Sidebar */}
       <div className="hidden md:block border-r bg-background">
-        <div className="sticky top-[75px] overflow-y-auto p-2">
+        <div className="sticky top-[60px] overflow-y-auto p-2">
           <nav className="space-y-1">
             {navItems.map((item) => {
               const isActive = pathname === item.href
