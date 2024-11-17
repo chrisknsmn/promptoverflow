@@ -2,7 +2,7 @@ export default function Logo() {
   return (
     <svg
       width="auto"
-      height="30"
+      height="20"
       viewBox="0 0 63 55"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -23,7 +23,7 @@ export default function Logo() {
       </g>
       <defs>
         <clipPath id="clip0_3_34">
-          <rect width="63" height="55" fill="white" />
+          <rect width="63" height="55" />
         </clipPath>
       </defs>
     </svg>

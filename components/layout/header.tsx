@@ -1,31 +1,25 @@
-import Link from "next/link";
 import { auth } from '@clerk/nextjs/server'
+import Link from "next/link";
+import { Button } from "@/components/ui/button"
 import {
   SignInButton,
-  SignedIn,
   SignedOut,
-  UserButton
 } from '@clerk/nextjs'
-
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
   DropdownMenuItem, 
   DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu"
-import { Button } from "@/components/ui/button"
-
-import { User, Menu } from 'lucide-react'
-import { navItems } from './navdetails'
-import ThemeToggle from './clrbtn';
-
+import { User, UserPlus, Menu } from 'lucide-react'
 import Logo from '@/public/LogoComponent';
+import { navItems } from './navdetails'
 
 export default function Header() {
   const { userId }: { userId: string | null } = auth()
   return (
     <header className="border-b w-full sticky top-0 left-0 z-10 bg-background/80">
-      <div className="max-w-screen-2xl mx-auto px-4 py-4 flex justify-between items-center">
+      <div className="max-w-screen-2xl mx-auto px-4 py-2 flex justify-between items-center">
         
         <Link href="/" className="text-2xl flex items-center">
           <span className="block md:hidden">
@@ -37,6 +31,7 @@ export default function Header() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start" className="w-56">
+                
                 {navItems.map((item) => (
                   <DropdownMenuItem key={item.title} asChild>
                     <Link href={item.href} className="flex items-center">
@@ -45,18 +40,64 @@ export default function Header() {
                     </Link>
                   </DropdownMenuItem>
                 ))}
+
+                <DropdownMenuItem>
+                  <span className="w-full border"></span>
+                </DropdownMenuItem>
+
+                {userId ? (
+                    <>
+                      <DropdownMenuItem>
+                        <Link href="/dashboard/user" className="flex items-center">
+                            <User className="mr-2 h-4 w-4" />
+                            <span>Profile</span>
+                        </Link>
+                      </DropdownMenuItem>
+                    </>
+                  ) : (
+                    <>
+                      <DropdownMenuItem>
+                        <SignedOut>
+                          <SignInButton mode="modal">
+                            <Link href="/sign-up" className="flex items-center">
+                                <User className="mr-2 h-4 w-4" />
+                                <span>Sign In</span>
+                            </Link>
+                          </SignInButton>
+                        </SignedOut>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem>
+                        <SignedOut>
+                          <SignInButton mode="modal">
+                            <Link href="/sign-up" className="flex items-center">
+                                <UserPlus className="mr-2 h-4 w-4" />
+                                <span>Sign Up</span>
+                            </Link>
+                          </SignInButton>
+                        </SignedOut>
+                      </DropdownMenuItem>
+                    </>
+                  )
+                }
+                
               </DropdownMenuContent>
             </DropdownMenu>
           </span>
-          <div className="text-black dark:text-white mr-2">
+          
+          <div className="hidden md:block text-black dark:text-white mr-2">
             <Logo />
           </div>
-          <span className="hidden md:block">
+          <span className="hidden md:block text-lg">
             Prompt <span className="font-bold">Overflow</span>
           </span>
+
         </Link>
 
-        <nav className="flex">
+        <nav className="flex mr-2">
+          <div className="block md:hidden text-black dark:text-white mr-1">
+            <Logo />
+          </div>
+          <div className='hidden md:block'>
           {/* <ThemeToggle/> */}
           {userId ? (
             <div className="flex items-center space-x-4">
@@ -69,15 +110,23 @@ export default function Header() {
               {/* <UserButton afterSignOutUrl="/" /> */}
             </div>
           ) : (
-            <div className="space-x-4">
+            <div className="space-x-2">
               <SignedOut>
                 <SignInButton mode="modal">
-                  <button className="text-blue-500 hover:underline">Sign In</button>
+                  <Link href="/sign-up" className="text-blue-500 hover:underline">
+                    <Button variant="secondary" size="sm">Sign In</Button>
+                  </Link>
                 </SignInButton>
-                <Link href="/sign-up" className="text-blue-500 hover:underline">Sign Up</Link>
+                <SignInButton mode="modal">
+                  <Link href="/sign-up" className="text-blue-500 hover:underline">
+                    <Button size="sm">Sign Up</Button>
+                  </Link>
+                </SignInButton>
               </SignedOut>
             </div>
-          )}.
+          )}
+          </div>
+
         </nav>
 
       </div>
